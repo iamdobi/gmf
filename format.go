@@ -482,6 +482,15 @@ func (this *FmtCtx) SeekFrameAt(sec int64, streamIndex int) error {
 	return nil
 }
 
+func (this *FmtCtx) GetFrameRate(streamIndex int) float32 {
+        ist, err := this.GetStream(streamIndex)
+        if err != nil {
+                panic(err)
+        }
+        fr := C.av_guess_frame_rate(this.avCtx, ist.avStream, nil)
+        return (float32(fr.num) / float32(fr.den))
+}
+
 func (this *FmtCtx) SetPb(val *AVIOContext) *FmtCtx {
 	this.avCtx.pb = val.avAVIOContext
 	this.customPb = true
